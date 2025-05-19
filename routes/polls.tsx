@@ -1,4 +1,3 @@
-import { useEffect, useState } from "preact/hooks";
 import { PollsIsland } from "../islands/PollsIsland.tsx";
 
 export default function Polls() {
