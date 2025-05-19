@@ -6,7 +6,8 @@ export default define.page(function Home() {
   return (
     <div>
       <Header />
-      <div class="mx-10">
+      <div class="mx-10 flex flex-wrap">
+        <Card link="/primer/" description="PCR primer design" />
         <Card link="/primer/" description="PCR primer design" />
       </div>
     </div>
