@@ -7,8 +7,8 @@ export default define.page(function Home() {
     <div>
       <Header />
       <div class="mx-10 flex flex-wrap">
-        <Card link="/primer/" description="PCR primer design" />
-        <Card link="/primer/" description="PCR primer design" />
+        <Card link="/polls" description="Django Polls" />
+        <Card link="/primer" description="PCR primer design" />
       </div>
     </div>
   );
