@@ -76,6 +76,18 @@ export default function MyFormPage({ backendUrl }: { backendUrl: string }) {
     setResult({}); // Clear results too
   };
 
+  // Helper function to deduplicate primers
+  const getUniquePrimers = (primers: Primer[]) => {
+    const seenSequences = new Set<string>();
+    return primers.filter((primer) => {
+      if (seenSequences.has(primer.SEQUENCE)) {
+        return false; // Duplicate
+      }
+      seenSequences.add(primer.SEQUENCE);
+      return true; // Unique
+    });
+  };
+
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
@@ -150,7 +162,10 @@ export default function MyFormPage({ backendUrl }: { backendUrl: string }) {
               </tr>
             </thead>
             <tbody>
-              {result.data.PRIMER_LEFT.map((primer, index) => (
+              {getUniquePrimers(result.data.PRIMER_LEFT).map((
+                primer,
+                index,
+              ) => (
                 <tr key={index}>
                   <td>{primer.SEQUENCE}</td>
                   <td>{primer.GC_PERCENT.toFixed(2)}</td>
@@ -168,7 +183,10 @@ export default function MyFormPage({ backendUrl }: { backendUrl: string }) {
               </tr>
             </thead>
             <tbody>
-              {result.data.PRIMER_RIGHT.map((primer, index) => (
+              {getUniquePrimers(result.data.PRIMER_RIGHT).map((
+                primer,
+                index,
+              ) => (
                 <tr key={index}>
                   <td>{primer.SEQUENCE}</td>
                   <td>{primer.GC_PERCENT.toFixed(2)}</td>
@@ -186,7 +204,10 @@ export default function MyFormPage({ backendUrl }: { backendUrl: string }) {
               </tr>
             </thead>
             <tbody>
-              {result.data.PRIMER_INTERNAL.map((primer, index) => (
+              {getUniquePrimers(result.data.PRIMER_INTERNAL).map((
+                primer,
+                index,
+              ) => (
                 <tr key={index}>
                   <td>{primer.SEQUENCE}</td>
                   <td>{primer.GC_PERCENT.toFixed(2)}</td>
