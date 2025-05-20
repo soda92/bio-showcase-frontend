@@ -22,6 +22,10 @@ export default function MyFormPage({ backendUrl }: { backendUrl: string }) {
   const [formParams, setFormParams] = useState<{ [key: string]: string }>({});
   const [result, setResult] = useState<FormResult>({});
 
+  const [sequence, setSequence] = useState<string>("");
+  const [seqStart, setSeqStart] = useState<number | string>(""); // Use string for empty
+  const [seqEnd, setSeqEnd] = useState<number | string>(""); // Use string for empty
+
   useEffect(() => {
     const doFetch = async () => {
       if (Object.keys(formParams).length === 0) return; // Don't fetch if no params
@@ -56,17 +60,83 @@ export default function MyFormPage({ backendUrl }: { backendUrl: string }) {
     setFormParams(params);
   };
 
+  const FillDemoData = () => {
+    setSequence(
+      "GCTTGCATGCCTGCAGGTCGACTCTAGAGGATCCCCCTACATTTTAGCATCAGTGAGTACAGCATGCTTACTGGAAGAGAGGGTCATGCAACAGATTAGGAGGTAAGTTTGCAAAGGCAGGCTAAGGAGGAGACGCACTGAATGCCATGGTAAGAACTCTGGACATAAAAATATTGGAAGTTGTTGAGCAAGTNAAAAAAATGTTTGGAAGTGTTACTTTAGCAATGGCAAGAATGATAGTATGGAATAGATTGGCAGAATGAAGGCAAAATGATTAGACATATTGCATTAAGGTAAAAAATGATAACTGAAGAATTATGTGCCACACTTATTAATAAGAAAGAATATGTGAACCTTGCAGATGTTTCCCTCTAGTAG",
+    );
+    setSeqStart(36);
+    setSeqEnd(342);
+  };
+
+  const ClearForm = () => {
+    setSequence("");
+    setSeqStart("");
+    setSeqEnd("");
+    setFormParams({}); // Clear existing parameters to reset results as well
+    setResult({}); // Clear results too
+  };
+
   return (
-    <div class="mx-auto my-1 border-2 rounded">
+    <div className="form-container">
       <form onSubmit={handleSubmit}>
-        <input type="text" name="sequence" placeholder="Parameter 1" />
-        <input type="number" name="seq_start" placeholder="0" />
-        <input type="number" name="seq_end" placeholder="0" />
-        <br />
-        <div class="mx-3 my-3 border-red-200 border-2 align-middle justify-evenly flex flex-wrap">
-          <button type="button" onClick={FillDemoData}>Fill demo data</button>
-          <button type="button">Clear</button>
-          <button type="submit">Submit</button>
+        <div className="form-group">
+          <label htmlFor="sequence">DNA Sequence:</label>
+          <textarea
+            id="sequence"
+            name="sequence"
+            rows={10}
+            cols={50}
+            placeholder="Enter your DNA sequence here..."
+            className="full-width-textarea"
+            value={sequence} // Bind value to state
+            onInput={(e) =>
+              setSequence((e.target as HTMLTextAreaElement).value)} // Update state on input
+          >
+          </textarea>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="seq_start">Sequence Start:</label>
+          <input
+            type="number"
+            id="seq_start"
+            name="seq_start"
+            placeholder="0"
+            className="small-input"
+            value={seqStart} // Bind value to state
+            onInput={(e) => setSeqStart((e.target as HTMLInputElement).value)} // Update state on input
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="seq_end">Sequence End:</label>
+          <input
+            type="number"
+            id="seq_end"
+            name="seq_end"
+            placeholder="0"
+            className="small-input"
+            value={seqEnd} // Bind value to state
+            onInput={(e) => setSeqEnd((e.target as HTMLInputElement).value)} // Update state on input
+          />
+        </div>
+
+        <div className="form-actions">
+          <button
+            type="button"
+            onClick={FillDemoData}
+            className="button secondary"
+          >
+            Fill Demo Data
+          </button>
+          <button
+            type="button"
+            onClick={ClearForm}
+            className="button secondary"
+          >
+            Clear
+          </button>
+          <button type="submit" className="button primary">Submit</button>
         </div>
       </form>
       {result.data && (
@@ -130,20 +200,4 @@ export default function MyFormPage({ backendUrl }: { backendUrl: string }) {
       {result.error && <p className="error">Error: {result.error}</p>}
     </div>
   );
-}
-
-function FillDemoData() {
-  const sequence = document.getElementsByName("sequence")[0];
-  if (sequence instanceof HTMLInputElement) {
-    sequence.value =
-      "GCTTGCATGCCTGCAGGTCGACTCTAGAGGATCCCCCTACATTTTAGCATCAGTGAGTACAGCATGCTTACTGGAAGAGAGGGTCATGCAACAGATTAGGAGGTAAGTTTGCAAAGGCAGGCTAAGGAGGAGACGCACTGAATGCCATGGTAAGAACTCTGGACATAAAAATATTGGAAGTTGTTGAGCAAGTNAAAAAAATGTTTGGAAGTGTTACTTTAGCAATGGCAAGAATGATAGTATGGAATAGATTGGCAGAATGAAGGCAAAATGATTAGACATATTGCATTAAGGTAAAAAATGATAACTGAAGAATTATGTGCCACACTTATTAATAAGAAAGAATATGTGAACCTTGCAGATGTTTCCCTCTAGTAG";
-  }
-  const seq_start = document.getElementsByName("seq_start")[0];
-  if (seq_start instanceof HTMLInputElement) {
-    seq_start.value = "36";
-  }
-  const seq_end = document.getElementsByName("seq_end")[0];
-  if (seq_end instanceof HTMLInputElement) {
-    seq_end.value = "342";
-  }
 }
