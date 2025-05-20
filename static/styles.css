@@ -10,3 +10,22 @@
     rgb(254, 249, 195)
   );
 }
+
+/* static/style.css */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid black;
+  margin-bottom: 20px; /* Add some space between tables */
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+}

@@ -1,9 +1,20 @@
 import { useEffect, useState } from "preact/hooks";
 
+interface Primer {
+  PENALTY: number;
+  SEQUENCE: string;
+  GC_PERCENT: number;
+}
+
+interface PrimerResult {
+  PRIMER_LEFT: Primer[];
+  PRIMER_RIGHT: Primer[];
+  PRIMER_INTERNAL: Primer[];
+}
+
 interface FormResult {
   // Define the structure of your results from the other server
-  // deno-lint-ignore no-explicit-any
-  data?: any; // Replace 'any' with a more specific type
+  data?: PrimerResult;
   error?: string;
 }
 
@@ -58,11 +69,61 @@ export default function MyFormPage({ backendUrl }: { backendUrl: string }) {
           <button type="submit">Submit</button>
         </div>
       </form>
-
       {result.data && (
         <div>
-          <h2>Results</h2>
-          <pre>{JSON.stringify(result.data, null, 2)}</pre>
+          <h2>Left Primers</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Sequence</th>
+                <th>GC Percent</th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.data.PRIMER_LEFT.map((primer, index) => (
+                <tr key={index}>
+                  <td>{primer.SEQUENCE}</td>
+                  <td>{primer.GC_PERCENT.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <h2>Right Primers</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Sequence</th>
+                <th>GC Percent</th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.data.PRIMER_RIGHT.map((primer, index) => (
+                <tr key={index}>
+                  <td>{primer.SEQUENCE}</td>
+                  <td>{primer.GC_PERCENT.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <h2>Internal Primers</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Sequence</th>
+                <th>GC Percent</th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.data.PRIMER_INTERNAL.map((primer, index) => (
+                <tr key={index}>
+                  <td>{primer.SEQUENCE}</td>
+                  <td>{primer.GC_PERCENT.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
