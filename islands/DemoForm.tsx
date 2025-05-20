@@ -6,7 +6,7 @@ interface FormResult {
   error?: string;
 }
 
-export default function MyFormPage() {
+export default function MyFormPage({ backendUrl }: { backendUrl: string }) {
   const [formParams, setFormParams] = useState<{ [key: string]: string }>({});
   const [result, setResult] = useState<FormResult>({});
 
@@ -15,7 +15,7 @@ export default function MyFormPage() {
       if (Object.keys(formParams).length === 0) return; // Don't fetch if no params
 
       const queryString = new URLSearchParams(formParams).toString();
-      const targetUrl = `/other-server-endpoint?${queryString}`; // Adjust the URL
+      const targetUrl = `${backendUrl}/primer/design/?${queryString}`; // Adjust the URL
 
       try {
         const response = await fetch(targetUrl);
@@ -24,7 +24,7 @@ export default function MyFormPage() {
         }
         const jsonData = await response.json();
         setResult({ data: jsonData });
-      // deno-lint-ignore no-explicit-any
+        // deno-lint-ignore no-explicit-any
       } catch (error: any) {
         setResult({ error: error.message });
       }
@@ -45,11 +45,17 @@ export default function MyFormPage() {
   };
 
   return (
-    <div>
+    <div class="mx-auto my-1 border-2 rounded">
       <form onSubmit={handleSubmit}>
-        <input type="text" name="param1" placeholder="Parameter 1" />
-        <input type="text" name="param2" placeholder="Parameter 2" />
-        <button type="submit">Submit</button>
+        <input type="text" name="sequence" placeholder="Parameter 1" />
+        <input type="number" name="seq_start" placeholder="0" />
+        <input type="number" name="seq_end" placeholder="0" />
+        <br />
+        <div class="mx-3 my-3 border-red-200 border-2 align-middle justify-evenly flex flex-wrap">
+          <button type="button" onClick={FillDemoData}>Fill demo data</button>
+          <button type="button">Clear</button>
+          <button type="submit">Submit</button>
+        </div>
       </form>
 
       {result.data && (
@@ -62,4 +68,20 @@ export default function MyFormPage() {
       {result.error && <p className="error">Error: {result.error}</p>}
     </div>
   );
+}
+
+function FillDemoData() {
+  const sequence = document.getElementsByName("sequence")[0];
+  if (sequence instanceof HTMLInputElement) {
+    sequence.value =
+      "GCTTGCATGCCTGCAGGTCGACTCTAGAGGATCCCCCTACATTTTAGCATCAGTGAGTACAGCATGCTTACTGGAAGAGAGGGTCATGCAACAGATTAGGAGGTAAGTTTGCAAAGGCAGGCTAAGGAGGAGACGCACTGAATGCCATGGTAAGAACTCTGGACATAAAAATATTGGAAGTTGTTGAGCAAGTNAAAAAAATGTTTGGAAGTGTTACTTTAGCAATGGCAAGAATGATAGTATGGAATAGATTGGCAGAATGAAGGCAAAATGATTAGACATATTGCATTAAGGTAAAAAATGATAACTGAAGAATTATGTGCCACACTTATTAATAAGAAAGAATATGTGAACCTTGCAGATGTTTCCCTCTAGTAG";
+  }
+  const seq_start = document.getElementsByName("seq_start")[0];
+  if (seq_start instanceof HTMLInputElement) {
+    seq_start.value = "36";
+  }
+  const seq_end = document.getElementsByName("seq_end")[0];
+  if (seq_end instanceof HTMLInputElement) {
+    seq_end.value = "342";
+  }
 }
