@@ -2,6 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 
 interface FormResult {
   // Define the structure of your results from the other server
+  // deno-lint-ignore no-explicit-any
   data?: any; // Replace 'any' with a more specific type
   error?: string;
 }
@@ -15,7 +16,7 @@ export default function MyFormPage({ backendUrl }: { backendUrl: string }) {
       if (Object.keys(formParams).length === 0) return; // Don't fetch if no params
 
       const queryString = new URLSearchParams(formParams).toString();
-      const targetUrl = `${backendUrl}/primer/design/?${queryString}`; // Adjust the URL
+      const targetUrl = `${backendUrl}/primer/api/design/?${queryString}`; // Adjust the URL
 
       try {
         const response = await fetch(targetUrl);
